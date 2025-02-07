@@ -7,7 +7,6 @@ import 'package:pie_menu/src/bouncing_widget.dart';
 import 'package:pie_menu/src/pie_action.dart';
 import 'package:pie_menu/src/pie_button.dart';
 import 'package:pie_menu/src/pie_canvas.dart';
-import 'package:pie_menu/src/pie_delegate.dart';
 import 'package:pie_menu/src/pie_menu.dart';
 import 'package:pie_menu/src/pie_provider.dart';
 import 'package:pie_menu/src/pie_theme.dart';
@@ -31,8 +30,7 @@ class PieCanvasCore extends StatefulWidget {
   PieCanvasCoreState createState() => PieCanvasCoreState();
 }
 
-class PieCanvasCoreState extends State<PieCanvasCore>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+class PieCanvasCoreState extends State<PieCanvasCore> with TickerProviderStateMixin, WidgetsBindingObserver {
   /// Controls platform-specific functionality, used to handle right-clicks.
   final _platform = BasePlatform();
 
@@ -179,12 +177,8 @@ class PieCanvasCoreState extends State<PieCanvasCore>
 
     final cx = this.cx < padding.left ? padding.left : this.cx;
     final cy = this.cy < padding.top ? padding.top : this.cy;
-    final cw = this.cx + this.cw > size.width - padding.right
-        ? size.width - padding.right - cx
-        : this.cw;
-    final ch = this.cy + this.ch > size.height - padding.bottom
-        ? size.height - padding.bottom - cy
-        : this.ch;
+    final cw = this.cx + this.cw > size.width - padding.right ? size.width - padding.right - cx : this.cw;
+    final ch = this.cy + this.ch > size.height - padding.bottom ? size.height - padding.bottom - cy : this.ch;
 
     final px = _pointerOffset.dx - cx;
     final py = _pointerOffset.dy - cy;
@@ -198,8 +192,7 @@ class PieCanvasCoreState extends State<PieCanvasCore>
       return degrees(atan(slope));
     }
 
-    if ((ch >= 2 * safeDistance && py < safeDistance) ||
-        (ch < 2 * safeDistance && py < ch / 2)) {
+    if ((ch >= 2 * safeDistance && py < safeDistance) || (ch < 2 * safeDistance && py < ch / 2)) {
       final o = px < cw / 2 ? const Offset(0, 0) : Offset(cw, 0);
       return arc / 2 - 90 + angleBetween(o, p);
     } else if (py > ch - safeDistance && (px < cw * 2 / 5 || px > cw * 3 / 5)) {
@@ -271,18 +264,14 @@ class PieCanvasCoreState extends State<PieCanvasCore>
       child: Material(
         type: MaterialType.transparency,
         child: MouseRegion(
-          cursor: hoveredAction != null
-              ? SystemMouseCursors.click
-              : SystemMouseCursors.basic,
+          cursor: hoveredAction != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
           child: Stack(
             children: [
               Listener(
                 behavior: HitTestBehavior.translucent,
                 onPointerDown: (event) => _pointerDown(event.position),
                 onPointerMove: (event) => _pointerMove(event.position),
-                onPointerHover: _state.menuOpen
-                    ? (event) => _pointerMove(event.position)
-                    : null,
+                onPointerHover: _state.menuOpen ? (event) => _pointerMove(event.position) : null,
                 onPointerUp: (event) => _pointerUp(event.position),
                 child: IgnorePointer(
                   ignoring: _state.menuOpen,
@@ -303,8 +292,7 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                       //* overlay start *//
                       if (menuRenderBox != null && menuRenderBox.attached)
                         ...() {
-                          final menuOffset =
-                              menuRenderBox.localToGlobal(Offset.zero);
+                          final menuOffset = menuRenderBox.localToGlobal(Offset.zero);
 
                           switch (_theme.overlayStyle) {
                             case PieOverlayStyle.around:
@@ -335,25 +323,21 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                                   left: menuOffset.dx - cx,
                                   top: menuOffset.dy - cy,
                                   child: AnimatedOpacity(
-                                    opacity: _state.menuOpen &&
-                                            _state.hoveredAction != null
+                                    opacity: _state.menuOpen && _state.hoveredAction != null
                                         ? _theme.childOpacityOnButtonHover
                                         : 1,
                                     duration: _theme.hoverDuration,
                                     curve: Curves.ease,
                                     child: SizedBox.fromSize(
                                       size: menuRenderBox.size,
-                                      child: _theme.childBounceEnabled &&
-                                              bounceAnimation != null
+                                      child: _theme.childBounceEnabled && bounceAnimation != null
                                           ? BouncingWidget(
                                               theme: _theme,
                                               animation: bounceAnimation,
-                                              pressedOffset:
-                                                  menuRenderBox.globalToLocal(
+                                              pressedOffset: menuRenderBox.globalToLocal(
                                                 _pointerOffset,
                                               ),
-                                              child: _menuChild ??
-                                                  const SizedBox(),
+                                              child: _menuChild ?? const SizedBox(),
                                             )
                                           : _menuChild,
                                     ),
@@ -375,19 +359,12 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                           child: Padding(
                             padding: _theme.tooltipPadding,
                             child: DefaultTextStyle.merge(
-                              textAlign: _theme.tooltipTextAlign ??
-                                  (px < cw / 2
-                                      ? TextAlign.right
-                                      : TextAlign.left),
+                              textAlign: _theme.tooltipTextAlign ?? (px < cw / 2 ? TextAlign.right : TextAlign.left),
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
-                                color: _theme.brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                              )
-                                  .merge(widget.theme.tooltipTextStyle)
-                                  .merge(_theme.tooltipTextStyle),
+                                color: _theme.brightness == Brightness.light ? Colors.black : Colors.white,
+                              ).merge(widget.theme.tooltipTextStyle).merge(_theme.tooltipTextStyle),
                               child: _tooltip ?? const SizedBox(),
                             ),
                           ),
@@ -405,16 +382,13 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                         } else {
                           final offsets = [
                             _pointerOffset,
-                            for (var i = 0; i < _actions.length; i++)
-                              _getActionOffset(i),
+                            for (var i = 0; i < _actions.length; i++) _getActionOffset(i),
                           ];
 
                           double? getTopDistance() {
                             if (py >= ch / 2) return null;
 
-                            final dyMax = offsets
-                                .map((o) => o.dy)
-                                .reduce((dy1, dy2) => max(dy1, dy2));
+                            final dyMax = offsets.map((o) => o.dy).reduce((dy1, dy2) => max(dy1, dy2));
 
                             return dyMax - cy + _theme.buttonSize / 2;
                           }
@@ -422,9 +396,7 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                           double? getBottomDistance() {
                             if (py < ch / 2) return null;
 
-                            final dyMin = offsets
-                                .map((o) => o.dy)
-                                .reduce((dy1, dy2) => min(dy1, dy2));
+                            final dyMin = offsets.map((o) => o.dy).reduce((dy1, dy2) => min(dy1, dy2));
 
                             return ch - dyMin + cy + _theme.buttonSize / 2;
                           }
@@ -435,9 +407,7 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                             left: 0,
                             right: 0,
                             child: Align(
-                              alignment: px < cw / 2
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
+                              alignment: px < cw / 2 ? Alignment.centerRight : Alignment.centerLeft,
                               child: child,
                             ),
                           );
@@ -446,39 +416,71 @@ class PieCanvasCoreState extends State<PieCanvasCore>
                       //* tooltip end *//
 
                       //* action buttons start *//
-                      Flow(
-                        delegate: PieDelegate(
-                          bounceAnimation: _buttonBounceAnimation,
-                          pointerOffset: _pointerOffset,
-                          canvasOffset: _canvasOffset,
-                          baseAngle: _baseAngle,
-                          angleDiff: _angleDiff,
-                          theme: _theme,
-                        ),
-                        children: [
-                          DecoratedBox(
-                            decoration: _theme.pointerDecoration ??
-                                BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: _theme.pointerColor ??
-                                        (_theme.brightness == Brightness.light
-                                            ? Colors.black.withOpacity(0.35)
-                                            : Colors.white.withOpacity(0.5)),
-                                    width: 4,
-                                  ),
+                      if (_state.menuOpen)
+                        Positioned(
+                          left: _pointerOffset.dx,
+                          top: _pointerOffset.dy,
+                          child: Container(
+                            // padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
                                 ),
-                          ),
-                          for (int i = 0; i < _actions.length; i++)
-                            PieButton(
-                              theme: _theme,
-                              action: _actions[i],
-                              angle: _getActionAngle(i),
-                              hovered: i == hoveredAction,
+                              ],
                             ),
-                        ],
-                      ),
-                      //* action buttons end *//
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: _actions.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final action = entry.value;
+
+                                return MouseRegion(
+                                  onEnter: (_) => _notifier.update(hoveredAction: index),
+                                  onExit: (_) => _notifier.update(clearHoveredAction: true),
+                                  child: GestureDetector(
+                                    onTap: action.onSelect,
+                                    child: Container(
+                                      width: 160, // Chiều rộng cố định
+                                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                        color: _state.hoveredAction == index
+                                            ? Colors.blue.withOpacity(0.1)
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          if (action.child != null)
+                                            IconTheme(
+                                              data: IconThemeData(
+                                                color: _state.hoveredAction == index ? Colors.blue : Colors.grey,
+                                                size: 20,
+                                              ),
+                                              child: action.child!,
+                                            ),
+                                          SizedBox(width: 12),
+                                          DefaultTextStyle(
+                                            style: TextStyle(
+                                              color: _state.hoveredAction == index ? Colors.blue : Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                            child: action.tooltip,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+//* action buttons end *//
                     ],
                   ),
                 ),
@@ -651,33 +653,24 @@ class PieCanvasCoreState extends State<PieCanvasCore>
         }
       }
 
-      final withinSafeDistance = (_pressedOffset - offset).distance < 8;
+      // Tính toán kích thước container và vị trí các action
+      const buttonHeight = 34.0; // Chiều cao mỗi nút
+      const spacing = 8.0; // Khoảng cách giữa các nút
+      const paddingTop = 8.0; // Padding phía trên container
 
-      if (_pressedOffset != _pointerOffset && !withinSafeDistance) {
-        _pressedOffset = _pointerOffset;
-      }
+      // Lấy vị trí global của container popover
+      final containerTop = _pointerOffset.dy;
+      final localY = offset.dy - containerTop - paddingTop;
 
-      final pointerDistance = (_pointerOffset - offset).distance;
-
-      if (withinSafeDistance ||
-          pointerDistance < _theme.radius - _theme.buttonSize * 0.5 ||
-          pointerDistance > _theme.radius + _theme.buttonSize * 0.8) {
+      // Kiểm tra chuột có trong vùng container hay không
+      if (localY < 0 || localY > (_actions.length * (buttonHeight + spacing))) {
         hover(null);
-      } else {
-        var closestDistance = double.infinity;
-        var closestAction = 0;
-
-        for (var i = 0; i < _actions.length; i++) {
-          final actionOffset = _getActionOffset(i);
-          final distance = (actionOffset - offset).distance;
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closestAction = i;
-          }
-        }
-
-        hover(closestDistance < _theme.buttonSize * 0.8 ? closestAction : null);
+        return;
       }
+
+      // Tính index dựa trên vị trí Y
+      final hoveredIndex = (localY ~/ (buttonHeight + spacing)).clamp(0, _actions.length - 1);
+      hover(hoveredIndex);
     } else if (_pressed && _isBeyondPointerBounds(offset)) {
       _detachMenu(animate: false);
     }

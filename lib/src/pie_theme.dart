@@ -72,7 +72,15 @@ class PieTheme {
     this.rightClickShowsMenu = false,
     this.overlayStyle = PieOverlayStyle.behind,
     this.childOpacityOnButtonHover = 0.5,
+    this.popoverItemHeight = 48,
+    this.popoverItemSpacing = 8,
   });
+
+  /// Chiều cao cho mỗi action trong popover
+  final double popoverItemHeight;
+
+  /// Khoảng cách giữa các action
+  final double popoverItemSpacing;
 
   /// How the background and tooltip widgets should be displayed
   /// if they are not specified explicitly.
@@ -217,9 +225,7 @@ class PieTheme {
 
   Color get effectiveOverlayColor {
     return overlayColor ??
-        (brightness == Brightness.light
-            ? Colors.white.withOpacity(0.8)
-            : Colors.black.withOpacity(0.8));
+        (brightness == Brightness.light ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.8));
   }
 
   /// Returns the [PieTheme] defined in the closest [PieCanvas] instance
@@ -290,8 +296,7 @@ class PieTheme {
       tooltipPadding: tooltipPadding ?? this.tooltipPadding,
       tooltipTextStyle: tooltipTextStyle ?? this.tooltipTextStyle,
       tooltipTextAlign: tooltipTextAlign ?? this.tooltipTextAlign,
-      tooltipCanvasAlignment:
-          tooltipCanvasAlignment ?? this.tooltipCanvasAlignment,
+      tooltipCanvasAlignment: tooltipCanvasAlignment ?? this.tooltipCanvasAlignment,
       tooltipUseFittedBox: tooltipUseFittedBox ?? this.tooltipUseFittedBox,
       pieBounceDuration: pieBounceDuration ?? this.pieBounceDuration,
       childBounceEnabled: childBounceEnabled ?? this.childBounceEnabled,
@@ -299,18 +304,15 @@ class PieTheme {
       childBounceDuration: childBounceDuration ?? this.childBounceDuration,
       childBounceFactor: childBounceDistance ?? childBounceFactor,
       childBounceCurve: childBounceCurve ?? this.childBounceCurve,
-      childBounceReverseCurve:
-          childBounceReverseCurve ?? this.childBounceReverseCurve,
-      childBounceFilterQuality:
-          childBounceFilterQuality ?? this.childBounceFilterQuality,
+      childBounceReverseCurve: childBounceReverseCurve ?? this.childBounceReverseCurve,
+      childBounceFilterQuality: childBounceFilterQuality ?? this.childBounceFilterQuality,
       fadeDuration: fadeDuration ?? this.fadeDuration,
       hoverDuration: hoverDuration ?? this.hoverDuration,
       delayDuration: delayDuration ?? this.delayDuration,
       leftClickShowsMenu: leftClickShowsMenu ?? this.leftClickShowsMenu,
       rightClickShowsMenu: rightClickShowsMenu ?? this.rightClickShowsMenu,
       overlayStyle: overlayStyle ?? this.overlayStyle,
-      childOpacityOnButtonHover:
-          childOpacityOnButtonHover ?? this.childOpacityOnButtonHover,
+      childOpacityOnButtonHover: childOpacityOnButtonHover ?? this.childOpacityOnButtonHover,
     );
   }
 }
